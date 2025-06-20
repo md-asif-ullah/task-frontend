@@ -16,26 +16,17 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
-const formSchema = z
-  .object({
-    fullname: z.string().min(2, "Full name is required").max(50),
-    email: z.string().email("Invalid email"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Confirm password is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
-  });
+const formSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
-const SingUpForm = () => {
+const LoginInForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullname: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
@@ -46,23 +37,6 @@ const SingUpForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="fullname"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-bold">Full Name</FormLabel>
-              <FormControl>
-                <Input
-                  className="md:h-[52px]"
-                  placeholder="Enter your name"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"
@@ -98,31 +72,29 @@ const SingUpForm = () => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-bold">Confirm Password</FormLabel>
-              <FormControl>
-                <Input
-                  className="md:h-[52px]"
-                  type="password"
-                  placeholder="Confirm your password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <Button
           type="submit"
           className="w-full bg-[#60E5AE] hover:bg-[#498069] duration-500 text-black md:h-[60px] text-xl font-medium"
         >
-          Sign Up
+          Login
         </Button>
       </form>
+
+      <section className="flex justify-between mt-10 lg:mt-28 mb-4">
+        <div className="flex items-center">
+          <input
+            id="checked-checkbox"
+            type="checkbox"
+            value=""
+            className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
+          />
+          <label htmlFor="checked-checkbox" className="ms-2 text-[#667085]">
+            Remember me
+          </label>
+        </div>
+        <p className="text-[#667085] mt-2">Forgot password ?</p>
+      </section>
 
       <div className="flex items-center my-5">
         <div className="flex-grow h-px bg-[#667085]" />
@@ -131,13 +103,13 @@ const SingUpForm = () => {
       </div>
 
       <p className="text-center text-black text-sm">
-        Already have an account?
-        <Link href="/login" className="font-bold text-xl ml-2">
-          Log In
+        Don’t have an account?
+        <Link href="/singup" className="font-bold text-xl ml-2">
+          Sing Up
         </Link>
       </p>
     </Form>
   );
 };
 
-export default SingUpForm;
+export default LoginInForm;
