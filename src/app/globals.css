@@ -119,4 +119,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .absolute_sub_container {
+    @apply absolute top-10 md:top-16 xl:top-[115px] right-5 md:right-[60px] left-5 md:left-[60px] bottom-1 xl:bottom-[60px] flex justify-center items-center;
+  }
 }

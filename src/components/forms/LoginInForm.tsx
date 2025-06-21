@@ -114,7 +114,9 @@ const LoginInForm = () => {
             Remember me
           </label>
         </div>
-        <p className="text-[#667085] mt-2">Forgot password ?</p>
+        <Link href="/reset-password" className="text-[#667085] mt-2">
+          Forgot password ?
+        </Link>
       </section>
 
       <div className="flex items-center my-5">
