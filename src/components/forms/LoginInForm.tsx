@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -30,8 +33,26 @@ const LoginInForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const router = useRouter();
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/users/login`,
+        values,
+        {
+          withCredentials: true,
+        }
+      );
+
+      toast.success("Login successful!");
+      form.reset();
+      router.push("/");
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Login failed. Please try again.";
+      toast.error(message);
+    }
   }
 
   return (

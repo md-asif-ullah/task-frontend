@@ -15,10 +15,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
-    fullname: z.string().min(2, "Full name is required").max(50),
+    fullName: z.string().min(2, "Full name is required").max(50),
     email: z.string().email("Invalid email"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(6, "Confirm password is required"),
@@ -32,15 +35,33 @@ const SingUpForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullname: "",
+      fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const router = useRouter();
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/users/singup`,
+        values,
+        {
+          withCredentials: true,
+        }
+      );
+
+      toast.success("Login successful!");
+      form.reset();
+      router.push("/");
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Login failed. Please try again.";
+      toast.error(message);
+    }
   }
 
   return (
@@ -48,7 +69,7 @@ const SingUpForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="fullname"
+          name="fullName"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-bold">Full Name</FormLabel>
@@ -118,7 +139,7 @@ const SingUpForm = () => {
         />
         <Button
           type="submit"
-          className="w-full bg-[#60E5AE] hover:bg-[#498069] duration-500 text-black md:h-[60px] text-xl font-medium"
+          className="w-full cursor-pointer bg-[#60E5AE] hover:bg-[#498069] duration-500 text-black md:h-[60px] text-xl font-medium"
         >
           Sign Up
         </Button>
