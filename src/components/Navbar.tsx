@@ -14,12 +14,16 @@ import {
 import Image from "next/image";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { PiSpinnerBallLight } from "react-icons/pi";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IoMenu, IoClose } from "react-icons/io5";
+import Link from "next/link";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const menuItem = [
     {
@@ -33,6 +37,25 @@ const Navbar = () => {
       pathname: "/spin",
     },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/users/logout`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      toast.success("Login successful!");
+
+      router.push("/");
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Login failed. Please try again.";
+      toast.error(message);
+    }
+  };
 
   return (
     <nav className="relative h-20 bg-transparent w-full flex items-center justify-between md:px-16 xl:px-24 mt-5 px-5 z-50">
@@ -61,15 +84,16 @@ const Navbar = () => {
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center space-x-12">
         {menuItem.map((item, index) => (
-          <div
+          <Link
             key={index}
-            className={`flex items-center gap-2 cursor-pointer ${
+            href={item.pathname}
+            className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 ${
               item.pathname === pathname ? "text-[#60E5AE]" : "text-white"
             }`}
           >
-            <i className=" text-4xl">{item.icon}</i>
-            <h2 className="text-2xl font-semibold ">{item.title}</h2>
-          </div>
+            <i className="text-3xl md:text-4xl">{item.icon}</i>
+            <h2 className="text-xl md:text-2xl font-semibold">{item.title}</h2>
+          </Link>
         ))}
       </div>
 
@@ -83,7 +107,7 @@ const Navbar = () => {
               alt="Profile image"
               width={40}
               height={40}
-              className="rounded-full object-cover h-10 w-10 border border-white"
+              className="rounded-full object-cover h-10 w-10 border border-white hidden md:block"
             />
             <h2 className="text-white text-lg font-medium">Name</h2>
             <IoMdArrowDropdown className="text-white text-xl" />
@@ -100,7 +124,9 @@ const Navbar = () => {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-lg">Log out</DropdownMenuItem>
+          <DropdownMenuItem className="text-lg" onClick={handleLogout}>
+            Log out
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
