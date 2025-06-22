@@ -10,9 +10,15 @@ import React, {
 } from "react";
 import axios from "axios";
 
+// Define user type explicitly
+interface UserType {
+  fullName: string;
+  email: string;
+}
+
 interface AuthContextType {
-  user: any | null;
-  setUser: Dispatch<SetStateAction<any | null>>;
+  user: UserType | null;
+  setUser: Dispatch<SetStateAction<UserType | null>>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -20,32 +26,36 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const getUser = useCallback(async () => {
     try {
-      const response = await axios.get<any>(
+      const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/users/profile`,
         {
           withCredentials: true,
         }
       );
       if (response.data.success) {
-        setUser(response.data?.data);
-      }
-      if (!response.data.success) {
+        setUser(response.data.data);
+      } else {
         setUser(null);
       }
     } catch (error) {
       setUser(null);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (!user) {
-      getUser();
-    }
-  }, [user, getUser, setUser]);
+    getUser();
+  }, [getUser]);
+
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

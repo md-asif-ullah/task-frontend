@@ -27,10 +27,6 @@ const Navbar = () => {
   const router = useRouter();
   const { user } = useAuth();
 
-  if (!user) {
-    <h2>loading....</h2>;
-  }
-
   const menuItem = [
     {
       icon: <HiOutlineClipboardList />,
@@ -116,7 +112,7 @@ const Navbar = () => {
               className="rounded-full object-cover h-10 w-10 border border-white hidden md:block"
             />
 
-            <h2 className="text-white text-lg font-medium">{user.fullName}</h2>
+            <h2 className="text-white text-lg font-medium">{user?.fullName}</h2>
             <IoMdArrowDropdown className="text-white text-xl" />
           </button>
         </DropdownMenuTrigger>
