@@ -31,7 +31,7 @@ const Navbar = () => {
     {
       icon: <HiOutlineClipboardList />,
       title: "Tasks List",
-      pathname: "/task",
+      pathname: "/",
     },
     {
       icon: <PiSpinnerBallLight />,
