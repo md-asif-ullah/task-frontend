@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { CgFileAdd } from "react-icons/cg";
 
@@ -68,15 +69,17 @@ const Task = () => {
                 </SelectContent>
               </Select>
 
-              <button
-                className="flex items-center justify-center gap-3 w-full sm:w-auto px-6 cursor-pointer  bg-[#60E5AE] hover:bg-[#498069] 
+              <Link href="/spin">
+                <button
+                  className="flex items-center justify-center gap-3 w-full sm:w-auto px-6 cursor-pointer  bg-[#60E5AE] hover:bg-[#498069] 
              transition-all duration-300 
              text-black text-lg md:text-xl font-semibold 
              rounded-xl md:h-[48px] shadow-md"
-              >
-                <CgFileAdd className="text-2xl md:text-lg" />
-                Add New Task
-              </button>
+                >
+                  <CgFileAdd className="text-2xl md:text-lg" />
+                  Add New Task
+                </button>
+              </Link>
             </div>
           </div>
 
