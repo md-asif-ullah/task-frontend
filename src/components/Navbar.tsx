@@ -19,11 +19,17 @@ import { IoMenu, IoClose } from "react-icons/io5";
 import Link from "next/link";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { useAuth } from "@/utils/useAuth";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { user } = useAuth();
+
+  if (!user) {
+    <h2>loading....</h2>;
+  }
 
   const menuItem = [
     {
@@ -109,7 +115,8 @@ const Navbar = () => {
               height={40}
               className="rounded-full object-cover h-10 w-10 border border-white hidden md:block"
             />
-            <h2 className="text-white text-lg font-medium">Name</h2>
+
+            <h2 className="text-white text-lg font-medium">{user.fullName}</h2>
             <IoMdArrowDropdown className="text-white text-xl" />
           </button>
         </DropdownMenuTrigger>
